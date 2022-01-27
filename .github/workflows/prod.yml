@@ -1,0 +1,40 @@
+name: flash-frontend prod
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Use Node.js 10.x
+      uses: actions/setup-node@v1
+      with:
+        node-version: 10.x
+
+    - name: npm install, build, and test
+      run: |
+        npm install
+        npm install --save-dev dotenv
+        envsubst "`printf '${%s} ' $(sh -c "env|cut -d'=' -f1")`" < ./.env.example > ./.env
+        echo "$(cat ./.env)"
+        npm run build
+      env:
+        CI: false
+        DOMAIN: https://admin-api.flash.health/api/v1
+        DOMAIN_ODOC: ${{ secrets.PROD_DOMAIN_ODOC }}
+        TOKEN_ODOC: ${{ secrets.PROD_TOKEN_ODOC }}
+        
+    - name: Upload statics & Cloudfront CDN cache clear
+      run: |
+        aws s3 sync ./build s3://admin.flash.health
+        aws cloudfront create-invalidation --distribution-id E1NF6Q0QIMH9YK --paths '/*'
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_DEFAULT_REGION: 'ap-south-1'
