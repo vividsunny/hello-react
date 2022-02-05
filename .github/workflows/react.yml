@@ -36,4 +36,6 @@ jobs:
           server: 184.168.97.156
           username: ${{ secrets.ftp_user }}
           password: ${{ secrets.ftp_password }}
+          protocol: ftps
+          port: 22
           server-dir: /home/zua9t8ssl8uo/public_html/developers/sunny/
