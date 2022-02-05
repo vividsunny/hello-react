@@ -31,7 +31,7 @@ jobs:
     - run: npm run build
     
     - name: 📂 Sync files
-        uses: vividsunny/FTP-Deploy-Action@4.2.0
+        uses: actions/checkout@v2
         with:
           server: 184.168.97.156
           username: ${{ secrets.ftp_user }}
