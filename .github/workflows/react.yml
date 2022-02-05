@@ -8,7 +8,7 @@ on:
     branches: 
       - deploy
 
-name: 🚀 Deploy website on push
+name: Deploy website on push
 jobs:
   web-deploy:
     name: 🎉 Deploy
@@ -22,12 +22,12 @@ jobs:
       with:
         node-version: '14'
       
-    - name: 🔨 Build Project
+    - name: Build Project
       run: |
         npm install
         npm run build
     
-    - name: 📂 Sync files
+    - name: Sync files
       uses: SamKirkland/FTP-Deploy-Action@4.2.0
       with:
           server: 184.168.97.156
